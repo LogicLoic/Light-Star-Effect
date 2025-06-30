@@ -1,3 +1,5 @@
+#The higher is the Performance, The lower is the quality.
+
 from tkinter import *
 from random import *
 from math import *
@@ -44,23 +46,43 @@ def hexa(nb):
 
 def realtime():
     global Performance
-    Performance = int(entry.get())
+    try:
+        Performance = int(entry.get())
+        if Performance < 1:
+            raise("Wrong performance value")
+    except:
+        entry.delete(0, END)
+        entry.insert(0, int(sum([star.size for star in stars]) / 70) + 1)
+        Performance = int(entry.get())
+    
+    try:
+        Speed = float(entry2.get())
+    except:
+        entry2.delete(0, END)
+        entry2.insert(0, 0.05)
+        Speed = 0.05
+
     for star in stars:
         canvas.delete(*(star.graph))
-        star.angle += 0.05
+        star.angle += Speed
         star.draw_star()
-    window.after(10, realtime)
+    window.after(1, realtime)
 
 window = Tk()
 window.title("Light star effect")
 
 canvas = Canvas(window, width=1900, height=1000, bg="#000")
 canvas.pack()
+
+stars = [Star(450, 500, 1000, f"ff0000", 0), Star(1350, 500, 100, f"00ff00", 0), Star(1750, 500, 100, f"0000ff", 0)]
+
 entry = Entry(window)
-entry.insert(0, 10)
+entry.insert(0, int(sum([star.size for star in stars]) / 70) + 1)
 entry.place(x=1,y=1)
 
-stars = [Star(450, 500, 1000, f"ff0000", 0), Star(1350, 500, 100, f"00ff00", 0), Star(1750, 500, 50, f"0000ff", 0)]
+entry2 = Entry(window)
+entry2.insert(0, 0.05)
+entry2.place(x=1,y=20)
 
 realtime()
 
